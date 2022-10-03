@@ -16,6 +16,7 @@ import (
 
 	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
+	udr_context "github.com/free5gc/udr/internal/context"
 	"github.com/free5gc/udr/internal/logger"
 	"github.com/free5gc/udr/internal/sbi/producer"
 	"github.com/free5gc/udr/internal/util"
@@ -23,6 +24,12 @@ import (
 )
 
 func sendResponse(c *gin.Context, rsp *httpwrapper.Response) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	for k, v := range rsp.Header {
 		// TODO: concatenate all values
 		c.Header(k, v[0])
@@ -38,6 +45,12 @@ func sendResponse(c *gin.Context, rsp *httpwrapper.Response) {
 }
 
 func getDataFromRequestBody(c *gin.Context, data interface{}) error {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return oauth_err
+	}
 	reqBody, err := c.GetRawData()
 	if err != nil {
 		logger.DataRepoLog.Errorf("Get Request Body error: %+v", err)
@@ -58,6 +71,12 @@ func getDataFromRequestBody(c *gin.Context, data interface{}) error {
 
 // HTTPApplicationDataInfluenceDataGet -
 func HTTPApplicationDataInfluenceDataGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	queryParams := c.Request.URL.Query()
 	rsp := producer.HandleApplicationDataInfluenceDataGet(queryParams)
 	sendResponse(c, rsp)
@@ -65,12 +84,24 @@ func HTTPApplicationDataInfluenceDataGet(c *gin.Context) {
 
 // HTTPApplicationDataInfluenceDataInfluenceIdDelete -
 func HTTPApplicationDataInfluenceDataInfluenceIdDelete(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	rsp := producer.HandleApplicationDataInfluenceDataInfluenceIdDelete(c.Params.ByName("influenceId"))
 	sendResponse(c, rsp)
 }
 
 // HTTPApplicationDataInfluenceDataInfluenceIdPatch -
 func HTTPApplicationDataInfluenceDataInfluenceIdPatch(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var trInfluDataPatch models.TrafficInfluDataPatch
 
 	if err := getDataFromRequestBody(c, &trInfluDataPatch); err != nil {
@@ -85,6 +116,12 @@ func HTTPApplicationDataInfluenceDataInfluenceIdPatch(c *gin.Context) {
 
 // HTTPApplicationDataInfluenceDataInfluenceIdPut -
 func HTTPApplicationDataInfluenceDataInfluenceIdPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var trInfluData models.TrafficInfluData
 
 	if err := getDataFromRequestBody(c, &trInfluData); err != nil {
@@ -98,6 +135,12 @@ func HTTPApplicationDataInfluenceDataInfluenceIdPut(c *gin.Context) {
 
 // HTTPApplicationDataInfluenceDataSubsToNotifyGet -
 func HTTPApplicationDataInfluenceDataSubsToNotifyGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	queryParams := c.Request.URL.Query()
 	rsp := producer.HandleApplicationDataInfluenceDataSubsToNotifyGet(queryParams)
 	sendResponse(c, rsp)
@@ -105,6 +148,12 @@ func HTTPApplicationDataInfluenceDataSubsToNotifyGet(c *gin.Context) {
 
 // HTTPApplicationDataInfluenceDataSubsToNotifyPost -
 func HTTPApplicationDataInfluenceDataSubsToNotifyPost(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var trInfluSub models.TrafficInfluSub
 
 	if err := getDataFromRequestBody(c, &trInfluSub); err != nil {
@@ -118,6 +167,12 @@ func HTTPApplicationDataInfluenceDataSubsToNotifyPost(c *gin.Context) {
 
 // HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdDelete -
 func HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdDelete(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	rsp := producer.HandleApplicationDataInfluenceDataSubsToNotifySubscriptionIdDelete(
 		c.Params.ByName("subscriptionId"))
 	sendResponse(c, rsp)
@@ -125,6 +180,12 @@ func HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdDelete(c *gin.Con
 
 // HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdGet -
 func HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	rsp := producer.HandleApplicationDataInfluenceDataSubsToNotifySubscriptionIdGet(
 		c.Params.ByName("subscriptionId"))
 	sendResponse(c, rsp)
@@ -132,6 +193,12 @@ func HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdGet(c *gin.Contex
 
 // HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdPut -
 func HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var trInfluSub models.TrafficInfluSub
 
 	if err := getDataFromRequestBody(c, &trInfluSub); err != nil {
@@ -146,18 +213,36 @@ func HTTPApplicationDataInfluenceDataSubsToNotifySubscriptionIdPut(c *gin.Contex
 
 // HTTPApplicationDataPfdsAppIdDelete -
 func HTTPApplicationDataPfdsAppIdDelete(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	rsp := producer.HandleApplicationDataPfdsAppIdDelete(c.Params.ByName("appId"))
 	sendResponse(c, rsp)
 }
 
 // HTTPApplicationDataPfdsAppIdGet -
 func HTTPApplicationDataPfdsAppIdGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	rsp := producer.HandleApplicationDataPfdsAppIdGet(c.Params.ByName("appId"))
 	sendResponse(c, rsp)
 }
 
 // HTTPApplicationDataPfdsAppIdPut -
 func HTTPApplicationDataPfdsAppIdPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var pfdDataforApp models.PfdDataForApp
 
 	if err := getDataFromRequestBody(c, &pfdDataforApp); err != nil {
@@ -171,6 +256,12 @@ func HTTPApplicationDataPfdsAppIdPut(c *gin.Context) {
 
 // HTTPApplicationDataPfdsGet -
 func HTTPApplicationDataPfdsGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	query := c.Request.URL.Query()
 	rsp := producer.HandleApplicationDataPfdsGet(query["appId"])
 	sendResponse(c, rsp)
@@ -178,21 +269,45 @@ func HTTPApplicationDataPfdsGet(c *gin.Context) {
 
 // HTTPExposureDataSubsToNotifyPost -
 func HTTPExposureDataSubsToNotifyPost(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 // HTTPExposureDataSubsToNotifySubIdDelete - Deletes a subcription for notifications
 func HTTPExposureDataSubsToNotifySubIdDelete(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 // HTTPExposureDataSubsToNotifySubIdPut - updates a subcription for notifications
 func HTTPExposureDataSubsToNotifySubIdPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 // HTTPPolicyDataBdtDataBdtReferenceIdDelete -
 func HTTPPolicyDataBdtDataBdtReferenceIdDelete(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["bdtReferenceId"] = c.Params.ByName("bdtReferenceId")
 
@@ -203,6 +318,12 @@ func HTTPPolicyDataBdtDataBdtReferenceIdDelete(c *gin.Context) {
 
 // HTTPPolicyDataBdtDataBdtReferenceIdGet -
 func HTTPPolicyDataBdtDataBdtReferenceIdGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["bdtReferenceId"] = c.Params.ByName("bdtReferenceId")
 
@@ -213,6 +334,12 @@ func HTTPPolicyDataBdtDataBdtReferenceIdGet(c *gin.Context) {
 
 // HTTPPolicyDataBdtDataBdtReferenceIdPut -
 func HTTPPolicyDataBdtDataBdtReferenceIdPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var bdtData models.BdtData
 
 	if err := getDataFromRequestBody(c, &bdtData); err != nil {
@@ -229,6 +356,12 @@ func HTTPPolicyDataBdtDataBdtReferenceIdPut(c *gin.Context) {
 
 // HTTPPolicyDataBdtDataGet -
 func HTTPPolicyDataBdtDataGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 
 	rsp := producer.HandlePolicyDataBdtDataGet(req)
@@ -238,6 +371,12 @@ func HTTPPolicyDataBdtDataGet(c *gin.Context) {
 
 // HTTPPolicyDataPlmnsPlmnIdUePolicySetGet -
 func HTTPPolicyDataPlmnsPlmnIdUePolicySetGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["plmnId"] = c.Params.ByName("plmnId")
 
@@ -248,6 +387,12 @@ func HTTPPolicyDataPlmnsPlmnIdUePolicySetGet(c *gin.Context) {
 
 // HTTPPolicyDataSponsorConnectivityDataSponsorIdGet -
 func HTTPPolicyDataSponsorConnectivityDataSponsorIdGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["sponsorId"] = c.Params.ByName("sponsorId")
 
@@ -258,6 +403,12 @@ func HTTPPolicyDataSponsorConnectivityDataSponsorIdGet(c *gin.Context) {
 
 // HTTPPolicyDataSubsToNotifyPost -
 func HTTPPolicyDataSubsToNotifyPost(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var policyDataSubscription models.PolicyDataSubscription
 
 	if err := getDataFromRequestBody(c, &policyDataSubscription); err != nil {
@@ -278,6 +429,12 @@ func HTTPPolicyDataSubsToNotifyPost(c *gin.Context) {
 
 // HTTPPolicyDataSubsToNotifySubsIdDelete -
 func HTTPPolicyDataSubsToNotifySubsIdDelete(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["subsId"] = c.Params.ByName("subsId")
 
@@ -288,6 +445,12 @@ func HTTPPolicyDataSubsToNotifySubsIdDelete(c *gin.Context) {
 
 // HTTPPolicyDataSubsToNotifySubsIdPut -
 func HTTPPolicyDataSubsToNotifySubsIdPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var policyDataSubscription models.PolicyDataSubscription
 
 	if err := getDataFromRequestBody(c, &policyDataSubscription); err != nil {
@@ -304,6 +467,12 @@ func HTTPPolicyDataSubsToNotifySubsIdPut(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdAmDataGet -
 func HTTPPolicyDataUesUeIdAmDataGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 
@@ -314,6 +483,12 @@ func HTTPPolicyDataUesUeIdAmDataGet(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdOperatorSpecificDataGet -
 func HTTPPolicyDataUesUeIdOperatorSpecificDataGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 
@@ -324,6 +499,12 @@ func HTTPPolicyDataUesUeIdOperatorSpecificDataGet(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdOperatorSpecificDataPatch - Need to be fixed
 func HTTPPolicyDataUesUeIdOperatorSpecificDataPatch(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var patchItemArray []models.PatchItem
 
 	if err := getDataFromRequestBody(c, &patchItemArray); err != nil {
@@ -340,6 +521,12 @@ func HTTPPolicyDataUesUeIdOperatorSpecificDataPatch(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdOperatorSpecificDataPut -
 func HTTPPolicyDataUesUeIdOperatorSpecificDataPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var operatorSpecificDataContainerMap map[string]models.OperatorSpecificDataContainer
 
 	if err := getDataFromRequestBody(c, &operatorSpecificDataContainerMap); err != nil {
@@ -356,6 +543,12 @@ func HTTPPolicyDataUesUeIdOperatorSpecificDataPut(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdSmDataGet -
 func HTTPPolicyDataUesUeIdSmDataGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 
@@ -366,6 +559,12 @@ func HTTPPolicyDataUesUeIdSmDataGet(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdSmDataPatch - Need to be fixed
 func HTTPPolicyDataUesUeIdSmDataPatch(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var usageMonDataMap map[string]models.UsageMonData
 
 	if err := getDataFromRequestBody(c, &usageMonDataMap); err != nil {
@@ -382,6 +581,12 @@ func HTTPPolicyDataUesUeIdSmDataPatch(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdSmDataUsageMonIdDelete -
 func HTTPPolicyDataUesUeIdSmDataUsageMonIdDelete(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 	req.Params["usageMonId"] = c.Params.ByName("usageMonId")
@@ -393,6 +598,12 @@ func HTTPPolicyDataUesUeIdSmDataUsageMonIdDelete(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdSmDataUsageMonIdGet -
 func HTTPPolicyDataUesUeIdSmDataUsageMonIdGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 	req.Params["usageMonId"] = c.Params.ByName("usageMonId")
@@ -404,6 +615,12 @@ func HTTPPolicyDataUesUeIdSmDataUsageMonIdGet(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdSmDataUsageMonIdPut -
 func HTTPPolicyDataUesUeIdSmDataUsageMonIdPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var usageMonData models.UsageMonData
 
 	if err := getDataFromRequestBody(c, &usageMonData); err != nil {
@@ -421,6 +638,12 @@ func HTTPPolicyDataUesUeIdSmDataUsageMonIdPut(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdUePolicySetGet -
 func HTTPPolicyDataUesUeIdUePolicySetGet(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 
@@ -431,6 +654,12 @@ func HTTPPolicyDataUesUeIdUePolicySetGet(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdUePolicySetPatch -
 func HTTPPolicyDataUesUeIdUePolicySetPatch(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var uePolicySet models.UePolicySet
 
 	if err := getDataFromRequestBody(c, &uePolicySet); err != nil {
@@ -447,6 +676,12 @@ func HTTPPolicyDataUesUeIdUePolicySetPatch(c *gin.Context) {
 
 // HTTPPolicyDataUesUeIdUePolicySetPut -
 func HTTPPolicyDataUesUeIdUePolicySetPut(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var uePolicySet models.UePolicySet
 
 	if err := getDataFromRequestBody(c, &uePolicySet); err != nil {

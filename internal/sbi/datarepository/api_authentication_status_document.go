@@ -16,6 +16,7 @@ import (
 
 	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
+	udr_context "github.com/free5gc/udr/internal/context"
 	"github.com/free5gc/udr/internal/logger"
 	"github.com/free5gc/udr/internal/sbi/producer"
 	"github.com/free5gc/util/httpwrapper"
@@ -23,6 +24,12 @@ import (
 
 // HTTPCreateAuthenticationStatus - To store the Authentication Status data of a UE
 func HTTPCreateAuthenticationStatus(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var authEvent models.AuthEvent
 
 	requestBody, err := c.GetRawData()
@@ -72,6 +79,12 @@ func HTTPCreateAuthenticationStatus(c *gin.Context) {
 
 // HTTPQueryAuthenticationStatus - Retrieves the Authentication Status of a UE
 func HTTPQueryAuthenticationStatus(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 

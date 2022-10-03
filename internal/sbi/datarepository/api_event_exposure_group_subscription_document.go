@@ -16,6 +16,7 @@ import (
 
 	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
+	udr_context "github.com/free5gc/udr/internal/context"
 	"github.com/free5gc/udr/internal/logger"
 	"github.com/free5gc/udr/internal/sbi/producer"
 	"github.com/free5gc/util/httpwrapper"
@@ -23,6 +24,12 @@ import (
 
 // HTTPRemoveEeGroupSubscriptions - Deletes a eeSubscription for a group of UEs or any UE
 func HTTPRemoveEeGroupSubscriptions(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueGroupId"] = c.Params.ByName("ueGroupId")
 	req.Params["subsId"] = c.Params.ByName("subsId")
@@ -45,6 +52,12 @@ func HTTPRemoveEeGroupSubscriptions(c *gin.Context) {
 
 // HTTPUpdateEeGroupSubscriptions - Stores an individual ee subscription of a group of UEs or any UE
 func HTTPUpdateEeGroupSubscriptions(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var eeSubscription models.EeSubscription
 
 	requestBody, err := c.GetRawData()

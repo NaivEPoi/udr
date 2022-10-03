@@ -16,6 +16,7 @@ import (
 
 	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
+	udr_context "github.com/free5gc/udr/internal/context"
 	"github.com/free5gc/udr/internal/logger"
 	"github.com/free5gc/udr/internal/sbi/producer"
 	"github.com/free5gc/util/httpwrapper"
@@ -23,6 +24,12 @@ import (
 
 // HTTPCreateAuthenticationSoR - To store the SoR acknowledgement information of a UE
 func HTTPCreateAuthenticationSoR(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var sorData models.SorData
 
 	requestBody, err := c.GetRawData()
@@ -72,6 +79,12 @@ func HTTPCreateAuthenticationSoR(c *gin.Context) {
 
 // HTTPQueryAuthSoR - Retrieves the SoR acknowledgement information of a UE
 func HTTPQueryAuthSoR(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 

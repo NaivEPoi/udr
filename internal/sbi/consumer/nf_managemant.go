@@ -1,7 +1,6 @@
 package consumer
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -73,7 +72,7 @@ func SendRegisterNFInstance(nrfUri, nfInstanceId string, profile models.NfProfil
 	var retrieveNfInstanceId string
 
 	for {
-		_, res, err := client.NFInstanceIDDocumentApi.RegisterNFInstance(context.TODO(), nfInstanceId, profile)
+		_, res, err := client.NFInstanceIDDocumentApi.RegisterNFInstance(openapi.CreateContext(udr_context.UDR_Self().OAuth, udr_context.UDR_Self().NfId, udr_context.UDR_Self().NrfUri, "UDR"), nfInstanceId, profile)
 		if err != nil || res == nil {
 			// TODO : add log
 			fmt.Println(fmt.Errorf("UDR register to NRF Error[%s]", err.Error()))
@@ -114,7 +113,7 @@ func SendDeregisterNFInstance() (problemDetails *models.ProblemDetails, err erro
 
 	var res *http.Response
 
-	res, err = client.NFInstanceIDDocumentApi.DeregisterNFInstance(context.Background(), udrSelf.NfId)
+	res, err = client.NFInstanceIDDocumentApi.DeregisterNFInstance(openapi.CreateContext(udr_context.UDR_Self().OAuth, udr_context.UDR_Self().NfId, udr_context.UDR_Self().NrfUri, "UDR"), udrSelf.NfId)
 	if err == nil {
 		return
 	} else if res != nil {

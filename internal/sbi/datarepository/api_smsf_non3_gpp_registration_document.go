@@ -16,6 +16,7 @@ import (
 
 	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
+	udr_context "github.com/free5gc/udr/internal/context"
 	"github.com/free5gc/udr/internal/logger"
 	"github.com/free5gc/udr/internal/sbi/producer"
 	"github.com/free5gc/util/httpwrapper"
@@ -23,6 +24,12 @@ import (
 
 // HTTPCreateSmsfContextNon3gpp - Create the SMSF context data of a UE via non-3GPP access
 func HTTPCreateSmsfContextNon3gpp(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	var smsfRegistration models.SmsfRegistration
 
 	requestBody, err := c.GetRawData()
@@ -72,6 +79,12 @@ func HTTPCreateSmsfContextNon3gpp(c *gin.Context) {
 
 // HTTPDeleteSmsfContextNon3gpp - To remove the SMSF context data of a UE via non-3GPP access
 func HTTPDeleteSmsfContextNon3gpp(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 
@@ -93,6 +106,12 @@ func HTTPDeleteSmsfContextNon3gpp(c *gin.Context) {
 
 // HTTPQuerySmsfContextNon3gpp - Retrieves the SMSF context data of a UE using non-3gpp access
 func HTTPQuerySmsfContextNon3gpp(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueId"] = c.Params.ByName("ueId")
 

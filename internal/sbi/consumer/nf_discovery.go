@@ -1,12 +1,13 @@
 package consumer
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
+	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/Nnrf_NFDiscovery"
 	"github.com/free5gc/openapi/models"
+	udr_context "github.com/free5gc/udr/internal/context"
 	"github.com/free5gc/udr/internal/logger"
 )
 
@@ -18,7 +19,7 @@ func SendSearchNFInstances(nrfUri string, targetNfType, requestNfType models.NfT
 	client := Nnrf_NFDiscovery.NewAPIClient(configuration)
 
 	var res *http.Response
-	result, res, err := client.NFInstancesStoreApi.SearchNFInstances(context.TODO(), targetNfType, requestNfType, &param)
+	result, res, err := client.NFInstancesStoreApi.SearchNFInstances(openapi.CreateContext(udr_context.UDR_Self().OAuth, udr_context.UDR_Self().NfId, udr_context.UDR_Self().NrfUri, "UDR"), targetNfType, requestNfType, &param)
 	if res != nil && res.StatusCode == http.StatusTemporaryRedirect {
 		err = fmt.Errorf("Temporary Redirect For Non NRF Consumer")
 	}

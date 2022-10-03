@@ -12,23 +12,43 @@ package datarepository
 import (
 	"net/http"
 
+	"github.com/free5gc/openapi"
+	udr_context "github.com/free5gc/udr/internal/context"
 	"github.com/gin-gonic/gin"
 )
 
 // HTTPCreateSessionManagementData - Creates and updates the session
 // management data for a UE and for an individual PDU session
 func HTTPCreateSessionManagementData(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 // HTTPDeleteSessionManagementData - Deletes the session management
 // data for a UE and for an individual PDU session
 func HTTPDeleteSessionManagementData(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 // HTTPQuerySessionManagementData - Retrieves the session management
 // data for a UE and for an individual PDU session
 func HTTPQuerySessionManagementData(c *gin.Context) {
+	scopes := []string{"nudr-dr"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && udr_context.UDR_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }

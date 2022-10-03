@@ -46,6 +46,7 @@ type UDRContext struct {
 	PolicyDataSubscriptions                 map[subsId]*models.PolicyDataSubscription
 	appDataInfluDataSubscriptionIdGenerator uint64
 	mtx                                     sync.RWMutex
+	OAuth                                   bool `yaml:"OAuth,omitempty"`
 }
 
 type UESubsData struct {

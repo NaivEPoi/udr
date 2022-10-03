@@ -65,6 +65,7 @@ type Configuration struct {
 	Sbi     *Sbi     `yaml:"sbi" valid:"required"`
 	Mongodb *Mongodb `yaml:"mongodb" valid:"required"`
 	NrfUri  string   `yaml:"nrfUri" valid:"url,required"`
+	OAuth   bool     `yaml:"OAuth,omitempty"`
 }
 
 func (c *Configuration) validate() (bool, error) {

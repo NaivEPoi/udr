@@ -45,4 +45,5 @@ func InitUdrContext(context *udr_context.UDRContext) {
 		logger.UtilLog.Warn("NRF Uri is empty! Using localhost as NRF IPv4 address.")
 		context.NrfUri = fmt.Sprintf("%s://%s:%d", context.UriScheme, "127.0.0.1", 29510)
 	}
+	context.OAuth = configuration.OAuth
 }
